@@ -1,0 +1,84 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="deviceID" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="16" y="505"/>
+		<width>102</width>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="291" y="33"/>
+		<property name="Text" value="CLEAR ALL PLOTS  Shift+P"/>
+	</static-widget>
+	<widget field="tentative Kv plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="284" y="363"/>
+		<width>680</width>
+		<height>155</height>
+	</widget>
+	<widget field="velocity setpoint [rps]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="18" y="293"/>
+		<height>27</height>
+	</widget>
+	<widget field="current velocity [rps]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="92" y="419"/>
+	</widget>
+	<widget field="Run PID Tuning Session TalonFX" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="51" y="57"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="10" y="7"/>
+		<property name="Text" value="Start Robot code before SmartDashboard or tuner session may sometimes resume Running (Run checkbox sometimes persists if not cleanly shutdown but it&apos;s always safely Disabled)"/>
+	</static-widget>
+	<widget field="DS status" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="63" y="123"/>
+		<width>197</width>
+	</widget>
+	<widget field="velocity plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="283" y="26"/>
+		<width>681</width>
+		<height>333</height>
+		<property name="Buffer Size (samples)" value="500"/>
+	</widget>
+	<widget field="disable controller" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="158" y="97"/>
+	</widget>
+	<widget field="enable controller" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
+		<location x="30" y="97"/>
+	</widget>
+	<widget field="velocity engineering units" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="71" y="445"/>
+	</widget>
+	<widget field="tentative Kv" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="134" y="392"/>
+	</widget>
+	<widget field="motor voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="127" y="364"/>
+	</widget>
+	<widget field="PID closed loop error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="23" y="330"/>
+	</widget>
+	<widget field="engineering units multiplicative factor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="15" y="471"/>
+	</widget>
+	<widget field="kV" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="113" y="263"/>
+	</widget>
+	<widget field="kS" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="113" y="236"/>
+	</widget>
+	<widget field="kD" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="112" y="209"/>
+	</widget>
+	<widget field="kI" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="115" y="181"/>
+		<height>20</height>
+	</widget>
+	<widget field="kP" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="113" y="153"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="34" y="43"/>
+		<property name="Text" value="Save Your Work - All Reset When Activated"/>
+	</static-widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>
