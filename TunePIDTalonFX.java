@@ -3,6 +3,7 @@ package frc.robot;
 import java.lang.invoke.MethodHandles;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -19,7 +20,7 @@ public class TunePIDTalonFX extends Command {
         System.out.println("Loading: " + fullClassName);
     }
 
-    TalonFX motor;
+    TalonFX4237 motor;
     Slot0Configs slot0Configs = new Slot0Configs();
 
     boolean enablePrevious;
@@ -32,7 +33,7 @@ public class TunePIDTalonFX extends Command {
 
     TunePIDTalonFX(int deviceID)
     {
-        motor = new TalonFX(deviceID);
+        motor = new TalonFX4237(deviceID, "rio", "Test Motor");
         SmartDashboard.putNumber("deviceID", deviceID);
     }
 
@@ -58,6 +59,14 @@ public class TunePIDTalonFX extends Command {
     SmartDashboard.putNumber("velocity engineering units", 0);
     SmartDashboard.putBoolean("enable controller", false);
     SmartDashboard.putBoolean("disable controller", true);
+
+    motor.setSafetyEnabled(false);
+
+    motor.setupFactoryDefaults();
+    motor.setupInverted(true);
+    motor.setupCoastMode();
+    // motor.setupVelocityConversionFactor(1.0);
+    motor.setupCurrentLimit(30.0, 35.0, 0.5);    
   }
 
   public void execute()
@@ -139,10 +148,12 @@ public class TunePIDTalonFX extends Command {
         double velocitySetpoint = SmartDashboard.getNumber("velocity setpoint [rps]", 0.); // 20
         egrConversionFactor = SmartDashboard.getNumber("engineering units multiplicative factor", 1.);
 
-        motor.getConfigurator().apply(slot0Configs);
+        // motor.getConfigurator().apply(slot0Configs);
+        motor.setupPIDController(0, slot0Configs.kP, slot0Configs.kI, slot0Configs.kD, slot0Configs.kS, slot0Configs.kV);
 
-        final VelocityVoltage requestVelocity = new VelocityVoltage(velocitySetpoint);
-        motor.setControl(requestVelocity);
+        // final VelocityVoltage requestVelocity = new VelocityVoltage(velocitySetpoint);
+        // motor.setControl(requestVelocity);
+        motor.setControlVelocity(velocitySetpoint);
     }
 
     else
@@ -166,7 +177,8 @@ public class TunePIDTalonFX extends Command {
     tentativeKv = 0.;
     if (getVelocity() != 0.)
     {
-        tentativeKv = (motor.getMotorVoltage().getValueAsDouble()-slot0Configs.kS)/getVelocity();
+        // tentativeKv = (motor.getMotorVoltage().getValueAsDouble()-slot0Configs.kS)/getVelocity();
+        tentativeKv = (motor.getMotorVoltage() - slot0Configs.kS) / getVelocity();
     }
     tentativeKv = KvSmooth.calculate(tentativeKv);
 
@@ -175,8 +187,9 @@ public class TunePIDTalonFX extends Command {
 
     SmartDashboard.putNumber("velocity plot", getVelocity()); // 19 to 21
     SmartDashboard.putNumber("current velocity [rps]", getVelocity());
-    SmartDashboard.putNumber("PID closed loop error", motor.getClosedLoopError().getValueAsDouble()); // -1 to 1
-    SmartDashboard.putNumber("motor voltage", motor.getMotorVoltage().getValueAsDouble()); // 2.2
+    // SmartDashboard.putNumber("PID closed loop error", motor.getClosedLoopError().getValueAsDouble()); // -1 to 1
+    // SmartDashboard.putNumber("motor voltage", motor.getMotorVoltage().getValueAsDouble()); // 2.2
+    SmartDashboard.putNumber("motor voltage", motor.getMotorVoltage()); // 2.2
     SmartDashboard.putNumber("tentative Kv", tentativeKv);
     SmartDashboard.putNumber("tentative Kv plot", tentativeKv);
     SmartDashboard.putNumber("velocity engineering units", velocityEgrUnits);
@@ -207,8 +220,9 @@ public class TunePIDTalonFX extends Command {
      */
     public void setVelocity(double velocity)
     {
-        final VelocityVoltage velocityVoltage = new VelocityVoltage(velocity);
-        motor.setControl(velocityVoltage);
+        // final VelocityVoltage velocityVoltage = new VelocityVoltage(velocity);
+        // motor.setControl(velocityVoltage);
+        motor.setControlVelocity(velocity);
     }
 
     /**
@@ -218,6 +232,7 @@ public class TunePIDTalonFX extends Command {
      */    
     public double getVelocity()
     {
-        return motor.getVelocity().getValueAsDouble();
+        // return motor.getVelocity().getValueAsDouble();
+        return motor.getVelocity();
     }
 }

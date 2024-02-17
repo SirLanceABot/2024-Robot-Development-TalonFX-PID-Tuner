@@ -23,7 +23,7 @@ public class Robot extends TimedRobot {
     StartTuningSwitchState = false; // hope it's not overwritten by another NetworkTables client
     SmartDashboard.putBoolean(startTuningSwitchName, StartTuningSwitchState);
 
-    TunePIDTalonFX tunePIDTalonFX = new TunePIDTalonFX(10);
+    TunePIDTalonFX tunePIDTalonFX = new TunePIDTalonFX(51);
     startTuningTrigger = new Trigger( ()-> StartTuningSwitchState )
       .whileTrue(tunePIDTalonFX);
   }
