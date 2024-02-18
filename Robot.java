@@ -1,39 +1,40 @@
 package frc.robot;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 public class Robot extends TimedRobot {
 
-    final String startTuningSwitchName = "Run PID Tuning Session TalonFX";
-    boolean StartTuningSwitchState;
-    Trigger startTuningTrigger;
+  TunePID tunePID = new TunePID();
+
+  TunePIDTalonFX tunePIDTalonFX1;
+  TunePIDTalonFX tunePIDTalonFX2;
+  TunePIDTalonFX tunePIDTalonFX3;
 
   @Override
   public void robotInit()
   {
-    // wait for NetworkTables to pick up any other clients' persistent values
-    // or you must start robot code before opening the clients such as SmartDashboard
-    // otherwise the following initialization value is overwritten and might be a true
-    // and start the command immediately
-    Timer.delay(2.);
-    StartTuningSwitchState = false; // hope it's not overwritten by another NetworkTables client
-    SmartDashboard.putBoolean(startTuningSwitchName, StartTuningSwitchState);
+    tunePIDTalonFX1 = new TunePIDTalonFX(tunePID, 12);
+    tunePIDTalonFX2 = new TunePIDTalonFX(tunePID, 12);
+    tunePIDTalonFX3 = new TunePIDTalonFX(tunePID, 12);
 
-    TunePIDTalonFX tunePIDTalonFX = new TunePIDTalonFX(51);
-    startTuningTrigger = new Trigger( ()-> StartTuningSwitchState )
-      .whileTrue(tunePIDTalonFX);
+    Map<String, Command> tuneThese = new HashMap<>(10);
+
+    tuneThese.put("Flywheel", tunePIDTalonFX1);
+    tuneThese.put("Index", tunePIDTalonFX2);
+    tuneThese.put("Pivot", tunePIDTalonFX3);
+
+    tuneThese.forEach((name, command)-> SmartDashboard.putData(name, command));
   }
 
   @Override
   public void robotPeriodic()
   {
-      // get state of triggering supplier
-      StartTuningSwitchState = SmartDashboard.getBoolean(startTuningSwitchName, false);
-
       CommandScheduler.getInstance().run();
   }
 }

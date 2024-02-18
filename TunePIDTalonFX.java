@@ -3,9 +3,6 @@ package frc.robot;
 import java.lang.invoke.MethodHandles;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.controls.VelocityVoltage;
-import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -21,6 +18,8 @@ public class TunePIDTalonFX extends Command {
     }
 
     TalonFX4237 motor;
+    int deviceID;
+
     Slot0Configs slot0Configs = new Slot0Configs();
 
     boolean enablePrevious;
@@ -31,14 +30,17 @@ public class TunePIDTalonFX extends Command {
 
     int flashDisabledDS = 0;
 
-    TunePIDTalonFX(int deviceID)
+    TunePIDTalonFX(TunePID tunePID, int deviceID)
     {
-        motor = new TalonFX4237(deviceID, "rio", "Test Motor");
-        SmartDashboard.putNumber("deviceID", deviceID);
+        this.deviceID = deviceID;
+        addRequirements(tunePID);
     }
 
   public void initialize()
   {
+    motor = new TalonFX4237(deviceID, "rio", "Test Motor");
+    SmartDashboard.putNumber("deviceID", deviceID);
+
     enablePrevious = true; // initialize to force change of state to come up in enable false disable true
     disablePrevious = false;
     KvSmooth = LinearFilter.movingAverage(50);
@@ -132,10 +134,6 @@ public class TunePIDTalonFX extends Command {
 
     double egrConversionFactor = 1.;
 
-//FIXME     To enable the feature, here's the new config below.
-//FIXME cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
-//FIXME use kS = 0 if this option is NOT selected!!!!!!!!!!!! or only run in the + direction!!!!!!!!!!
-
     if(enable)
     {
         enablePrevious = true;
@@ -175,20 +173,19 @@ public class TunePIDTalonFX extends Command {
 
     double
     tentativeKv = 0.;
-    if (getVelocity() != 0.)
+    if (motor.getVelocity() != 0.)
     {
         // tentativeKv = (motor.getMotorVoltage().getValueAsDouble()-slot0Configs.kS)/getVelocity();
-        tentativeKv = (motor.getMotorVoltage() - slot0Configs.kS) / getVelocity();
+        tentativeKv = (motor.getMotorVoltage() - slot0Configs.kS) / motor.getVelocity();
     }
     tentativeKv = KvSmooth.calculate(tentativeKv);
 
     var
-    velocityEgrUnits = egrConversionFactor*egrSmooth.calculate(getVelocity());
+    velocityEgrUnits = egrConversionFactor*egrSmooth.calculate(motor.getVelocity());
 
-    SmartDashboard.putNumber("velocity plot", getVelocity()); // 19 to 21
-    SmartDashboard.putNumber("current velocity [rps]", getVelocity());
+    SmartDashboard.putNumber("velocity plot", motor.getVelocity()); // 19 to 21
+    SmartDashboard.putNumber("current velocity [rps]", motor.getVelocity());
     // SmartDashboard.putNumber("PID closed loop error", motor.getClosedLoopError().getValueAsDouble()); // -1 to 1
-    // SmartDashboard.putNumber("motor voltage", motor.getMotorVoltage().getValueAsDouble()); // 2.2
     SmartDashboard.putNumber("motor voltage", motor.getMotorVoltage()); // 2.2
     SmartDashboard.putNumber("tentative Kv", tentativeKv);
     SmartDashboard.putNumber("tentative Kv plot", tentativeKv);
@@ -213,26 +210,8 @@ public class TunePIDTalonFX extends Command {
   public boolean runsWhenDisabled() {
     return true;
   }
-    /**
-     * Set the velocity of a PID controller
-     * Units are rotations per second.
-     * @param velocity The velocity setpoint
-     */
-    public void setVelocity(double velocity)
-    {
-        // final VelocityVoltage velocityVoltage = new VelocityVoltage(velocity);
-        // motor.setControl(velocityVoltage);
-        motor.setControlVelocity(velocity);
-    }
-
-    /**
-     * Get the velocity of the encoder.
-     * Units are RPMs by default, but can be changed using the conversion factor.
-     * @return The velocity of the encoder
-     */    
-    public double getVelocity()
-    {
-        // return motor.getVelocity().getValueAsDouble();
-        return motor.getVelocity();
-    }
 }
+
+//FIXME     To enable the feature, here's the new config below.
+//FIXME cfg.Slot0.StaticFeedforwardSign = StaticFeedforwardSignValue.UseClosedLoopSign;
+//FIXME use kS = 0 if this option is NOT selected!!!!!!!!!!!! or only run in the + direction!!!!!!!!!!
