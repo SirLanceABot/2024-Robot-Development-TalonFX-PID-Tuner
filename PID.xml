@@ -7,13 +7,13 @@
 		<location x="128" y="455"/>
 	</widget>
 	<widget field="Pivot" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="481" y="522"/>
+		<location x="492" y="523"/>
 	</widget>
 	<widget field="Index" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="361" y="522"/>
+		<location x="370" y="523"/>
 	</widget>
 	<widget field="Flywheel" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="227" y="522"/>
+		<location x="241" y="523"/>
 	</widget>
 	<widget field="deviceID" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="14" y="455"/>
@@ -87,7 +87,7 @@
 		<location x="117" y="86"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="15" y="529"/>
+		<location x="16" y="539"/>
 		<height>19</height>
 		<property name="Text" value="Save Your Work - All Reset When Activated:"/>
 	</static-widget>
