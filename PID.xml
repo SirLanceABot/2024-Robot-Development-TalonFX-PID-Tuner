@@ -1,20 +1,26 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="motor controller name" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="18" y="482"/>
+	</widget>
+	<widget field="CAN bus" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="128" y="455"/>
+	</widget>
 	<widget field="Pivot" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="983" y="259"/>
+		<location x="481" y="522"/>
 	</widget>
 	<widget field="Index" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="980" y="221"/>
+		<location x="361" y="522"/>
 	</widget>
 	<widget field="Flywheel" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="966" y="184"/>
+		<location x="227" y="522"/>
 	</widget>
 	<widget field="deviceID" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="975" y="126"/>
+		<location x="14" y="455"/>
 		<width>102</width>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="291" y="33"/>
+		<location x="363" y="39"/>
 		<property name="Text" value="CLEAR ALL PLOTS  Shift+P"/>
 	</static-widget>
 	<widget field="tentative Kv plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
@@ -23,18 +29,18 @@
 		<height>155</height>
 	</widget>
 	<widget field="velocity setpoint [rps]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="18" y="293"/>
-		<height>27</height>
+		<location x="22" y="241"/>
+		<height>38</height>
 	</widget>
 	<widget field="current velocity [rps]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="92" y="419"/>
+		<location x="88" y="371"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
 		<location x="10" y="7"/>
 		<property name="Text" value="Start Robot code before SmartDashboard or tuner session may sometimes resume Running (Run checkbox sometimes persists if not cleanly shutdown but it&apos;s always safely Disabled)"/>
 	</static-widget>
 	<widget field="DS status" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="63" y="123"/>
+		<location x="19" y="58"/>
 		<width>197</width>
 	</widget>
 	<widget field="velocity plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
@@ -44,45 +50,46 @@
 		<property name="Buffer Size (samples)" value="500"/>
 	</widget>
 	<widget field="disable controller" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="158" y="97"/>
+		<location x="128" y="35"/>
 	</widget>
 	<widget field="enable controller" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="30" y="97"/>
+		<location x="14" y="34"/>
 	</widget>
 	<widget field="velocity engineering units" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="71" y="445"/>
+		<location x="67" y="399"/>
 	</widget>
 	<widget field="tentative Kv" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="134" y="392"/>
+		<location x="131" y="342"/>
 	</widget>
 	<widget field="motor voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="127" y="364"/>
+		<location x="123" y="315"/>
 	</widget>
 	<widget field="PID closed loop error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="23" y="330"/>
+		<location x="27" y="289"/>
 	</widget>
 	<widget field="engineering units multiplicative factor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="15" y="471"/>
+		<location x="11" y="427"/>
 	</widget>
 	<widget field="kV" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="113" y="263"/>
+		<location x="117" y="211"/>
 	</widget>
 	<widget field="kS" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="113" y="236"/>
+		<location x="117" y="179"/>
 	</widget>
 	<widget field="kD" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="112" y="209"/>
+		<location x="116" y="147"/>
 	</widget>
 	<widget field="kI" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="115" y="181"/>
+		<location x="119" y="116"/>
 		<height>20</height>
 	</widget>
 	<widget field="kP" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="113" y="153"/>
+		<location x="117" y="86"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="34" y="43"/>
-		<property name="Text" value="Save Your Work - All Reset When Activated"/>
+		<location x="15" y="529"/>
+		<height>19</height>
+		<property name="Text" value="Save Your Work - All Reset When Activated:"/>
 	</static-widget>
 </dashboard>
 <live-window>

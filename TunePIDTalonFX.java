@@ -21,6 +21,7 @@ public class TunePIDTalonFX extends Command {
     int deviceID;
 
     Slot0Configs slot0Configs = new Slot0Configs();
+    String slot0ConfigsPrevious;
 
     boolean enablePrevious;
     boolean disablePrevious;
@@ -38,8 +39,15 @@ public class TunePIDTalonFX extends Command {
 
   public void initialize()
   {
-    motor = new TalonFX4237(deviceID, "rio", "Test Motor");
+    var
+    canbus = "rio";
+    var
+    motorControllerName = "Test Motor";
+    
+    motor = new TalonFX4237(deviceID, canbus, motorControllerName);
     SmartDashboard.putNumber("deviceID", deviceID);
+    SmartDashboard.putString("CAN bus", canbus);
+    SmartDashboard.putString("motor controller name", motorControllerName);
 
     enablePrevious = true; // initialize to force change of state to come up in enable false disable true
     disablePrevious = false;
@@ -68,19 +76,12 @@ public class TunePIDTalonFX extends Command {
     motor.setupInverted(true);
     motor.setupCoastMode();
     // motor.setupVelocityConversionFactor(1.0);
-    motor.setupCurrentLimit(30.0, 35.0, 0.5);    
+    motor.setupCurrentLimit(30.0, 35.0, 0.5);
+    slot0ConfigsPrevious = slot0Configs.serialize();  
   }
 
   public void execute()
   {
-    slot0Configs.kP = 0.0; // volts / rotation/sec
-    slot0Configs.kI = 0; // volts / rotation
-    slot0Configs.kD = 0.0; // volts / rotations/sec/sec
-    slot0Configs.kS = 0.0; // max voltage that doesn't move the motor 
-    slot0Configs.kV =  0.0; // volts / rotation per second
-    // kF for other PID controllers is essentially this kV and maybe the kS crudely wrapped into it, too.
-    // There is also an arbitrary feedforward that can be used if kS, kV (or others' kF) aren't adequate
-
     boolean enable = SmartDashboard.getBoolean("enable controller", false);
     boolean disable = SmartDashboard.getBoolean("disable controller", true);
 
@@ -138,17 +139,23 @@ public class TunePIDTalonFX extends Command {
     {
         enablePrevious = true;
 
-        slot0Configs.kP = SmartDashboard.getNumber("kP", 0.); // .1
-        slot0Configs.kI = SmartDashboard.getNumber("kI", 0.); // .0
-        slot0Configs.kD = SmartDashboard.getNumber("kD", 0.); // .004
-        slot0Configs.kS = SmartDashboard.getNumber("kS", 0.);//0.13
-        slot0Configs.kV =  SmartDashboard.getNumber("kV", 0.); // .109
+        // kF for other PID controllers is essentially this kV and maybe the kS crudely wrapped into it, too.
+        // There is also an arbitrary feedforward that can be used if kS, kV (or others' kF) aren't adequate
+        slot0Configs.kP = SmartDashboard.getNumber("kP", 0.); // volts / rotation/sec // .1
+        slot0Configs.kI = SmartDashboard.getNumber("kI", 0.); // volts / rotation // .0
+        slot0Configs.kD = SmartDashboard.getNumber("kD", 0.); // volts / rotations/sec/sec // .004
+        slot0Configs.kS = SmartDashboard.getNumber("kS", 0.); // max voltage that doesn't move the motor // 0.13
+        slot0Configs.kV =  SmartDashboard.getNumber("kV", 0.); // volts / rotation per second // .109
         double velocitySetpoint = SmartDashboard.getNumber("velocity setpoint [rps]", 0.); // 20
         egrConversionFactor = SmartDashboard.getNumber("engineering units multiplicative factor", 1.);
-
-        // motor.getConfigurator().apply(slot0Configs);
-        motor.setupPIDController(0, slot0Configs.kP, slot0Configs.kI, slot0Configs.kD, slot0Configs.kS, slot0Configs.kV);
-
+        var
+        slot0ConfigsNew = slot0Configs.serialize();
+        if(!slot0ConfigsNew.equals(slot0ConfigsPrevious))
+        {
+            // motor.getConfigurator().apply(slot0Configs);
+            motor.setupPIDController(0, slot0Configs.kP, slot0Configs.kI, slot0Configs.kD, slot0Configs.kS, slot0Configs.kV);
+            slot0ConfigsPrevious = slot0ConfigsNew;
+        }
         // final VelocityVoltage requestVelocity = new VelocityVoltage(velocitySetpoint);
         // motor.setControl(requestVelocity);
         motor.setControlVelocity(velocitySetpoint);
