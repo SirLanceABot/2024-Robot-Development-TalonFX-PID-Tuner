@@ -1,101 +1,107 @@
 <xml version="1.0">
 <dashboard>
+	<widget field="current position [r]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="99" y="422"/>
+	</widget>
+	<widget field="response engineering units" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="59" y="447"/>
+	</widget>
+	<widget field="position setpoint [r]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="33" y="130"/>
+		<height>37</height>
+	</widget>
+	<widget field="Auto choices" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="610" y="506"/>
+	</widget>
 	<widget field="motor controller name" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="18" y="482"/>
+		<location x="23" y="501"/>
 	</widget>
 	<widget field="CAN bus" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="128" y="455"/>
+		<location x="119" y="526"/>
+		<width>104</width>
 	</widget>
 	<widget field="Pivot" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="492" y="523"/>
+		<location x="495" y="522"/>
 	</widget>
 	<widget field="Index" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="370" y="523"/>
+		<location x="382" y="522"/>
 	</widget>
 	<widget field="Flywheel" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
-		<location x="241" y="523"/>
+		<location x="254" y="521"/>
 	</widget>
 	<widget field="deviceID" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="14" y="455"/>
+		<location x="10" y="524"/>
 		<width>102</width>
 	</widget>
-	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="363" y="39"/>
-		<property name="Text" value="CLEAR ALL PLOTS  Shift+P"/>
-	</static-widget>
 	<widget field="tentative Kv plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
-		<location x="284" y="363"/>
+		<location x="279" y="344"/>
 		<width>680</width>
 		<height>155</height>
 	</widget>
 	<widget field="velocity setpoint [rps]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="22" y="241"/>
+		<location x="22" y="87"/>
 		<height>38</height>
 	</widget>
 	<widget field="current velocity [rps]" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="88" y="371"/>
+		<location x="88" y="396"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
 		<location x="10" y="7"/>
 		<property name="Text" value="Start Robot code before SmartDashboard or tuner session may sometimes resume Running (Run checkbox sometimes persists if not cleanly shutdown but it&apos;s always safely Disabled)"/>
 	</static-widget>
 	<widget field="DS status" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="19" y="58"/>
+		<location x="16" y="59"/>
 		<width>197</width>
-	</widget>
-	<widget field="velocity plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
-		<location x="283" y="26"/>
-		<width>681</width>
-		<height>333</height>
-		<property name="Buffer Size (samples)" value="500"/>
 	</widget>
 	<widget field="disable controller" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
 		<location x="128" y="35"/>
 	</widget>
 	<widget field="enable controller" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.CheckBox">
-		<location x="14" y="34"/>
-	</widget>
-	<widget field="velocity engineering units" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="67" y="399"/>
+		<location x="13" y="34"/>
 	</widget>
 	<widget field="tentative Kv" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="131" y="342"/>
+		<location x="130" y="371"/>
 	</widget>
 	<widget field="motor voltage" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="123" y="315"/>
+		<location x="122" y="347"/>
 	</widget>
 	<widget field="PID closed loop error" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="27" y="289"/>
+		<location x="27" y="315"/>
 	</widget>
 	<widget field="engineering units multiplicative factor" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="11" y="427"/>
+		<location x="11" y="472"/>
 	</widget>
 	<widget field="kV" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="117" y="211"/>
+		<location x="116" y="286"/>
 	</widget>
 	<widget field="kS" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="117" y="179"/>
+		<location x="116" y="260"/>
 	</widget>
 	<widget field="kD" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="116" y="147"/>
+		<location x="115" y="228"/>
 	</widget>
 	<widget field="kI" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="119" y="116"/>
+		<location x="118" y="201"/>
 		<height>20</height>
 	</widget>
 	<widget field="kP" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="117" y="86"/>
+		<location x="116" y="175"/>
 	</widget>
 	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
-		<location x="16" y="539"/>
+		<location x="334" y="502"/>
 		<height>19</height>
 		<property name="Text" value="Save Your Work - All Reset When Activated:"/>
 	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="343" y="47"/>
+		<property name="Text" value="CLEAR ALL PLOTS  Shift+P"/>
+	</static-widget>
+	<widget field="response plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
+		<location x="243" y="34"/>
+		<width>716</width>
+		<property name="Buffer Size (samples)" value="500"/>
+	</widget>
 </dashboard>
 <live-window>
 </live-window>
-	<hidden field="test cmd"/>
-	<hidden field="motor.getPosition = "/>
-	<hidden field="PID tuning choices"/>
-	<hidden field="currentAngle"/>
 </xml>
