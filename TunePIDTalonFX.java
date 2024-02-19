@@ -6,7 +6,6 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -31,14 +30,6 @@ public class TunePIDTalonFX extends Command {
     LinearFilter egrSmooth;
 
     int flashDisabledDS = 0;
-    
-    private SendableChooser<TuningModes> PIDtuningModes;
-    private static enum TuningModes
-    {
-        NotSet, Velocity, Position;
-    }
-    private TuningModes tuningMode;
-    private TuningModes tuningModePrevious;
 
     TunePIDTalonFX(TunePID tunePID, int deviceID)
     {
@@ -71,14 +62,10 @@ public class TunePIDTalonFX extends Command {
     motor.setupFactoryDefaults();
     motor.setupInverted(true);
     motor.setupCoastMode();
-    // motor.setupVelocityConversionFactor(1.0);
+    motor.setupVelocityConversionFactor(4.0);
     motor.setupCurrentLimit(30.0, 35.0, 0.5);
     slot0ConfigsPrevious = slot0Configs.serialize();
-    PIDtuningModes = new SendableChooser<>();
-    PIDtuningModes.setDefaultOption( "velocity", TuningModes.Velocity);        
-    PIDtuningModes.addOption( "position", TuningModes.Position );
-    SmartDashboard.putData("Auto choices", PIDtuningModes);
-    tuningModePrevious = TuningModes.NotSet;
+    clearGainsSetpoints();
   }
 
   public void execute()
@@ -86,19 +73,7 @@ public class TunePIDTalonFX extends Command {
     boolean enable = SmartDashboard.getBoolean("enable controller", false);
     boolean disable = SmartDashboard.getBoolean("disable controller", true);
 
-    tuningMode = PIDtuningModes.getSelected();
-    if(tuningMode != tuningModePrevious)
-    {
-        clearGainsSetpoints();
-        tuningModePrevious = tuningMode;
-        // force disable PID controller on tuning mode change
-        disable = true;
-        disablePrevious = true;
-        enable = false;
-        enablePrevious = false;
-    }
-
-    // manage change of state with fake radio button type logic
+    // manage change of enable/disable state with fake radio button type logic
     if(!enable && !disable) // one has to be choosen
     {
         enable = enablePrevious;
@@ -116,7 +91,24 @@ public class TunePIDTalonFX extends Command {
         disable = false;
         disablePrevious = false;
     }
-    
+//////////////////////////////
+    // manage change of velocity/position state with almost radio button type logic
+    // WPILib chooser failed and this circumvents that usage
+    // both off or both on isn't appropriate so all off
+    // force user to be purposeful here - it's a dangerous setting
+    boolean velocity = SmartDashboard.getBoolean("velocity", false);
+    boolean position = SmartDashboard.getBoolean("position", false);
+    if(velocity == position)
+    {
+        clearGainsSetpoints();
+        velocity = false;
+        position = false;
+        enable = false;
+        enablePrevious = false;
+        disable = true;
+        disablePrevious = true;
+    }
+
     if(DriverStation.isDisabled()) // make controller disabled so it doesn't come on if robot enabled
     {
         flashDisabledDS++;
@@ -157,10 +149,10 @@ public class TunePIDTalonFX extends Command {
         slot0Configs.kP = SmartDashboard.getNumber("kP", 0.); // volts / rotation/sec
         slot0Configs.kI = SmartDashboard.getNumber("kI", 0.); // volts / rotation
         slot0Configs.kD = SmartDashboard.getNumber("kD", 0.); // volts / rotations/sec/sec
-        slot0Configs.kS = SmartDashboard.getNumber("kS", 0.); // max voltage that doesn't move the motor
-        slot0Configs.kV =  SmartDashboard.getNumber("kV", 0.); // volts / rotation per second
-        double velocitySetpoint = SmartDashboard.getNumber("velocity setpoint [rps]", 0.);
-        double positionSetpoint = SmartDashboard.getNumber("position setpoint [r]", 0.);
+        slot0Configs.kS = SmartDashboard.getNumber("kS (Rev: 0)", 0.); // max voltage that doesn't move the motor
+        slot0Configs.kV =  SmartDashboard.getNumber("kV (Rev: kF)", 0.); // volts / rotation per second
+        double velocitySetpoint = SmartDashboard.getNumber("velocity setpoint", 0.);
+        double positionSetpoint = SmartDashboard.getNumber("position setpoint", 0.);
         egrConversionFactor = SmartDashboard.getNumber("engineering units multiplicative factor", 1.);
         var
         slot0ConfigsNew = slot0Configs.serialize();
@@ -171,13 +163,13 @@ public class TunePIDTalonFX extends Command {
             slot0ConfigsPrevious = slot0ConfigsNew;
         }
 
-        if ( tuningMode == TuningModes.Velocity )
+        if ( velocity )
         {
             motor.setControlVelocity(velocitySetpoint);
         }
 
         else
-        if ( tuningMode == TuningModes.Position)
+        if ( position)
         {
             motor.setControlPosition(positionSetpoint);  
         }
@@ -209,7 +201,7 @@ public class TunePIDTalonFX extends Command {
 
     double
     tentativeKv = 0.;
-    if (tuningMode == TuningModes.Velocity && motor.getVelocity() != 0.)
+    if (velocity && motor.getVelocity() != 0.)
     {
         // tentativeKv = (motor.getMotorVoltage().getValueAsDouble()-slot0Configs.kS)/getVelocity();
         tentativeKv = (motor.getMotorVoltage() - slot0Configs.kS) / motor.getVelocity();
@@ -218,7 +210,7 @@ public class TunePIDTalonFX extends Command {
 
     double responseEgrUnits;
 
-    if ( tuningMode == TuningModes.Velocity )
+    if ( velocity )
     {
         responseEgrUnits = egrConversionFactor*egrSmooth.calculate(motor.getVelocity());
         SmartDashboard.putNumber("response engineering units", responseEgrUnits);
@@ -230,8 +222,8 @@ public class TunePIDTalonFX extends Command {
         SmartDashboard.putNumber("response engineering units", responseEgrUnits);
         SmartDashboard.putNumber("response plot", motor.getPosition());
     }
-    SmartDashboard.putNumber("current velocity [rps]", motor.getVelocity());
-    SmartDashboard.putNumber("current position [r]", motor.getPosition());
+    SmartDashboard.putNumber("current velocity", motor.getVelocity());
+    SmartDashboard.putNumber("current position", motor.getPosition());
     // SmartDashboard.putNumber("PID closed loop error", motor.getClosedLoopError().getValueAsDouble()); // -1 to 1
     SmartDashboard.putNumber("motor voltage", motor.getMotorVoltage()); // 2.2
     SmartDashboard.putNumber("tentative Kv", tentativeKv);
@@ -262,18 +254,21 @@ public class TunePIDTalonFX extends Command {
     SmartDashboard.putNumber("kP", 0.);
     SmartDashboard.putNumber("kI", 0.);
     SmartDashboard.putNumber("kD", 0.);
-    SmartDashboard.putNumber("kS", 0.);
-    SmartDashboard.putNumber("kV", 0.);
-    SmartDashboard.putNumber("velocity setpoint [rps]", 0.);
-    SmartDashboard.putNumber("position setpoint [r]", 0);
+    SmartDashboard.putNumber("kS (Rev: 0)", 0.);
+    SmartDashboard.putNumber("kV (Rev: kF)", 0.);
+    SmartDashboard.putNumber("velocity setpoint", 0.);
+    SmartDashboard.putNumber("position setpoint", 0);
     SmartDashboard.putNumber("engineering units multiplicative factor", 0);
     SmartDashboard.putNumber("response plot", 0); // 19 to 21
-    SmartDashboard.putNumber("current velocity [rps]", 0);
+    SmartDashboard.putNumber("current velocity", 0);
     SmartDashboard.putNumber("PID closed loop error",0); // -1 to 1
     SmartDashboard.putNumber("motor voltage", 0); // 2.2
     SmartDashboard.putNumber("tentative Kv", 0);
     SmartDashboard.putNumber("tentative Kv plot", 0);
     SmartDashboard.putNumber("response engineering units", 0);
+    SmartDashboard.putBoolean("velocity", false);
+    SmartDashboard.putBoolean("position", false);
+    SmartDashboard.updateValues();
   }
 
 }
