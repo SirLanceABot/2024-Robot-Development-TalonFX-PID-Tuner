@@ -26,18 +26,24 @@ public class Robot extends TimedRobot {
 
     tunePIDTalonFX3 = new TunePIDTalonFX(tunePID, 12);
 
-    // Map<String, Command> tuneThese = new HashMap<>(10);
-    // tuneThese.put("Flywheel", tunePIDTalonFX1);
-    // tuneThese.put("Index", tunePIDTalonFX2);
-    // tuneThese.put("Pivot", tunePIDTalonFX3);
-    // tuneThese.forEach((name, command)-> SmartDashboard.putData(name, command));
-
-    SmartDashboard.putData("Flywheel", tunePIDTalonFX1);
-    Timer.delay(2.);
-        SmartDashboard.putData("Index", tunePIDTalonFX2);
-    Timer.delay(2.);
-        SmartDashboard.putData("Pivot", tunePIDTalonFX3);
-    Timer.delay(2.);
+    Map<String, Command> tuneThese = new HashMap<>(10);
+    tuneThese.put("Flywheel", tunePIDTalonFX1);
+    tuneThese.put("Index", tunePIDTalonFX2);
+    tuneThese.put("Pivot", tunePIDTalonFX3);
+    tuneThese.forEach((name, command)->
+    {
+      String nameX = new String(name);
+      Command commandX = command.asProxy();
+      SmartDashboard.putData(nameX, commandX);
+    });
+    // code below before dereferencing the HaspMap entry
+    // HaspMap got concurrency errors with SmartDashboard
+    // SmartDashboard.putData("Flywheel", tunePIDTalonFX1);
+    // Timer.delay(2.);
+    //     SmartDashboard.putData("Index", tunePIDTalonFX2);
+    // Timer.delay(2.);
+    //     SmartDashboard.putData("Pivot", tunePIDTalonFX3);
+    // Timer.delay(2.);
     }
 
   @Override
@@ -46,8 +52,6 @@ public class Robot extends TimedRobot {
       CommandScheduler.getInstance().run();
   }
 }
-
-
 
 /*
 https://www.splatco.com/skb/2665.htm
@@ -89,31 +93,3 @@ Also the tentativeÂ CRFs are attached (vC version is for Kraken, the other for 
 I confirmed kS now supports both strategies based on your config choice, default is to use profile velocity (which is how it works in the currently public release).
 I tested both Kraken and Falcon.
 */
-
-
-// // these tuning statements rely on LiveWindow enabled and some variables already defined in existing code
-
-//         periodicData.StartTuningSwitch = SmartDashboard.getBoolean("Activate PID", false); // actually in periodic read
-//         new Trigger(()->periodicData.StartTuningSwitch).onTrue(this.tunePID()); // in initialization
-
-//     public Command tunePID()
-//     {
-//         motor.setupPIDController(myConstants.slotId, myConstants.kP, myConstants.kI, myConstants.kD);
-
-//         SmartDashboard.putBoolean("Activate PID", false); // reset the switch
-
-//         return runEnd(() -> setAngle(myConstants.setPoint),  () -> stop());
-//     }
-
-
-//     public Command tunePID()
-//     {
-//         return
-//             runOnce(() -> motor.setupPIDController(myConstants.slotId, myConstants.kP, myConstants.kI, myConstants.kD)).withName("setK's")
-//         .andThen(
-//             runOnce(() -> SmartDashboard.putBoolean("Activate PID", false))).withName("reset switch")
-//         .andThen(
-//             run(() -> setAngle(myConstants.setPoint))).withName("control to " + myConstants.setPoint + "degrees")
-//         .finallyDo(
-//             this::stop).withName("stop tuning");
-//     }

@@ -39,12 +39,22 @@ public class TunePIDTalonFX extends Command {
 
   public void initialize()
   {
+//////////////////////////////////////////////////////////////////////////////////////////////////////
     var
     canbus = "rio";
     var
     motorControllerName = "Test Motor";
     
     motor = new TalonFX4237(deviceID, canbus, motorControllerName);
+    motor.setSafetyEnabled(false);
+
+    motor.setupFactoryDefaults();
+    motor.setupInverted(true);
+    motor.setupCoastMode();
+    motor.setupVelocityConversionFactor(4.0);
+    motor.setupCurrentLimit(30.0, 35.0, 0.5);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    setName(fullClassName);
     SmartDashboard.putNumber("deviceID", deviceID);
     SmartDashboard.putString("CAN bus", canbus);
     SmartDashboard.putString("motor controller name", motorControllerName);
@@ -57,13 +67,6 @@ public class TunePIDTalonFX extends Command {
     SmartDashboard.putBoolean("enable controller", false);
     SmartDashboard.putBoolean("disable controller", true);
 
-    motor.setSafetyEnabled(false);
-
-    motor.setupFactoryDefaults();
-    motor.setupInverted(true);
-    motor.setupCoastMode();
-    motor.setupVelocityConversionFactor(4.0);
-    motor.setupCurrentLimit(30.0, 35.0, 0.5);
     slot0ConfigsPrevious = slot0Configs.serialize();
     clearGainsSetpoints();
   }
