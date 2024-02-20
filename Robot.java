@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -13,37 +12,38 @@ public class Robot extends TimedRobot {
 
   TunePID tunePID = new TunePID();
 
-  TunePIDTalonFX tunePIDTalonFX1;
-  TunePIDTalonFX tunePIDTalonFX2;
-  TunePIDTalonFX tunePIDTalonFX3;
+  TunePIDTalonFX tunePIDFlywheel;
+  TunePIDTalonFX tunePIDIndex;
+  TunePIDTalonFX tunePIDPivot;
 
   @Override
   public void robotInit()
   {
-    tunePIDTalonFX1 = new TunePIDTalonFX(tunePID, 12);
-
-    tunePIDTalonFX2 = new TunePIDTalonFX(tunePID, 12);
-
-    tunePIDTalonFX3 = new TunePIDTalonFX(tunePID, 12);
-
     Map<String, Command> tuneThese = new HashMap<>(10);
-    tuneThese.put("Flywheel", tunePIDTalonFX1);
-    tuneThese.put("Index", tunePIDTalonFX2);
-    tuneThese.put("Pivot", tunePIDTalonFX3);
+
+    Flywheel flywheel = new Flywheel(12, "rio", "Flywheel Motor"); // testing real one is CANivore 51
+    tunePIDFlywheel = new TunePIDTalonFX(tunePID, flywheel, flywheel.getMotor());
+    tuneThese.put("Flywheel", tunePIDFlywheel);
+
+    // Index index = new Index(12, "CANivore", "Index Motor"); // 52
+    // tunePIDIndex = new TunePIDTalonFX(tunePID, index, index.getMotor());
+    // tuneThese.put("Index", tunePIDIndex);
+    tuneThese.put("Index", tunePIDFlywheel); // test data
+
+    // Pivot pivot = new Pivot(12, "CANivore", "Pivot Motor"); // FIXME ?
+    // tunePIDPivot = new TunePIDTalonFX(tunePID, pivot, pivot.getMotor());
+    // tuneThese.put("Pivot", tunePIDPivot);
+    tuneThese.put("Pivot", tunePIDFlywheel); // test data
+
     tuneThese.forEach((name, command)->
     {
       String nameX = new String(name);
       Command commandX = command.asProxy();
       SmartDashboard.putData(nameX, commandX);
     });
-    // code below before dereferencing the HaspMap entry
+    // need to dereferencing the HaspMap entry else
     // HaspMap got concurrency errors with SmartDashboard
-    // SmartDashboard.putData("Flywheel", tunePIDTalonFX1);
-    // Timer.delay(2.);
-    //     SmartDashboard.putData("Index", tunePIDTalonFX2);
-    // Timer.delay(2.);
-    //     SmartDashboard.putData("Pivot", tunePIDTalonFX3);
-    // Timer.delay(2.);
+    // update use of the HashMap
     }
 
   @Override

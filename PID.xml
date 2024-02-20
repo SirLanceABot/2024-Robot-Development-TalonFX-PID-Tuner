@@ -29,13 +29,6 @@
 	<widget field="response engineering units" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
 		<location x="59" y="447"/>
 	</widget>
-	<widget field="motor controller name" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="23" y="501"/>
-	</widget>
-	<widget field="CAN bus" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="119" y="526"/>
-		<width>104</width>
-	</widget>
 	<widget field="Pivot" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="495" y="522"/>
 	</widget>
@@ -44,10 +37,6 @@
 	</widget>
 	<widget field="Flywheel" type="Command" class="edu.wpi.first.smartdashboard.gui.elements.Command">
 		<location x="254" y="521"/>
-	</widget>
-	<widget field="deviceID" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
-		<location x="10" y="524"/>
-		<width>102</width>
 	</widget>
 	<widget field="tentative Kv plot" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.LinePlot">
 		<location x="279" y="344"/>
@@ -104,6 +93,19 @@
 		<width>716</width>
 		<property name="Buffer Size (samples)" value="500"/>
 	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="10" y="7"/>
+		<property name="Text" value="Start Robot code before SmartDashboard or tuner session may sometimes resume Running (Run checkbox sometimes persists if not cleanly shutdown but it&apos;s always safely Disabled)"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="334" y="502"/>
+		<height>19</height>
+		<property name="Text" value="Save Your Work - All Reset When Activated:"/>
+	</static-widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.Label">
+		<location x="343" y="47"/>
+		<property name="Text" value="CLEAR ALL PLOTS  Shift+P"/>
+	</static-widget>
 </dashboard>
 <live-window>
 </live-window>

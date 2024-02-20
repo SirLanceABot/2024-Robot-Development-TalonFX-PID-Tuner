@@ -18,7 +18,6 @@ public class TunePIDTalonFX extends Command {
     }
 
     TalonFX4237 motor;
-    int deviceID;
 
     Slot0Configs slot0Configs = new Slot0Configs();
     String slot0ConfigsPrevious;
@@ -30,35 +29,19 @@ public class TunePIDTalonFX extends Command {
     LinearFilter egrSmooth;
 
     int flashDisabledDS = 0;
+    double tentativeKv;
 
-    TunePIDTalonFX(TunePID tunePID, int deviceID)
+    TunePIDTalonFX(TunePID tunePID, Subsystem4237 subsystem, TalonFX4237 motor)
     {
-        this.deviceID = deviceID;
-        addRequirements(tunePID);
+        this.motor = motor;
+
+        addRequirements(tunePID, subsystem);
+
     }
 
   public void initialize()
   {
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-    var
-    canbus = "rio";
-    var
-    motorControllerName = "Test Motor";
-    
-    motor = new TalonFX4237(deviceID, canbus, motorControllerName);
-    motor.setSafetyEnabled(false);
-
-    motor.setupFactoryDefaults();
-    motor.setupInverted(true);
-    motor.setupCoastMode();
-    motor.setupVelocityConversionFactor(4.0);
-    motor.setupCurrentLimit(30.0, 35.0, 0.5);
-/////////////////////////////////////////////////////////////////////////////////////////////////////
     setName(fullClassName);
-    SmartDashboard.putNumber("deviceID", deviceID);
-    SmartDashboard.putString("CAN bus", canbus);
-    SmartDashboard.putString("motor controller name", motorControllerName);
-
     enablePrevious = true; // initialize to force change of state to come up in enable false disable true
     disablePrevious = false;
     KvSmooth = LinearFilter.movingAverage(50);
@@ -68,6 +51,7 @@ public class TunePIDTalonFX extends Command {
     SmartDashboard.putBoolean("disable controller", true);
 
     slot0ConfigsPrevious = slot0Configs.serialize();
+    tentativeKv = 0.;
     clearGainsSetpoints();
   }
 
@@ -94,7 +78,7 @@ public class TunePIDTalonFX extends Command {
         disable = false;
         disablePrevious = false;
     }
-//////////////////////////////
+
     // manage change of velocity/position state with almost radio button type logic
     // WPILib chooser failed and this circumvents that usage
     // both off or both on isn't appropriate so all off
@@ -202,15 +186,11 @@ public class TunePIDTalonFX extends Command {
         return;
     }
 
-    double
-    tentativeKv = 0.;
     if (velocity && motor.getVelocity() != 0.)
     {
-        // tentativeKv = (motor.getMotorVoltage().getValueAsDouble()-slot0Configs.kS)/getVelocity();
         tentativeKv = (motor.getMotorVoltage() - slot0Configs.kS) / motor.getVelocity();
+        tentativeKv = KvSmooth.calculate(tentativeKv);
     }
-    tentativeKv = KvSmooth.calculate(tentativeKv);
-
     double responseEgrUnits;
 
     if ( velocity )
@@ -225,6 +205,7 @@ public class TunePIDTalonFX extends Command {
         SmartDashboard.putNumber("response engineering units", responseEgrUnits);
         SmartDashboard.putNumber("response plot", motor.getPosition());
     }
+
     SmartDashboard.putNumber("current velocity", motor.getVelocity());
     SmartDashboard.putNumber("current position", motor.getPosition());
     // SmartDashboard.putNumber("PID closed loop error", motor.getClosedLoopError().getValueAsDouble()); // -1 to 1
