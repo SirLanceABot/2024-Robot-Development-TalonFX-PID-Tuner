@@ -1,13 +1,7 @@
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
 
 public class Robot extends TimedRobot {
 
@@ -16,29 +10,17 @@ public class Robot extends TimedRobot {
   TunePIDTalonFX tunePIDFlywheel;
   TunePIDTalonFX tunePIDIndex;
   TunePIDTalonFX tunePIDPivot;
-  public static Map<String, Command> tuneThese = new HashMap<>(10);
+  // public static Map<String, Command> tuneThese = new HashMap<>(10); // other Classes' motors register here
 
   @Override
   public void robotInit()
   {
-
-    Flywheel flywheel = new Flywheel(12, "rio", "Flywheel Motor", tunePID); // testing real one is CANivore 51
-    // Index index = new Index(52, "CANivore", "Index Motor", tunePID);
-    // Pivot pivot = new Pivot(xx, "CANivore", "Pivot Motor", tunePID);
-
-    tuneThese.put("Index", Commands.idle(tunePID, flywheel)); // test data
-    tuneThese.put("Pivot", Commands.idle(tunePID, flywheel)); // test data
-
-    tuneThese.forEach((name, command)->
-    {
-      String nameX = new String(name);
-      Command commandX = command.asProxy();
-      SmartDashboard.putData(nameX, commandX);
-    });
-    // needed to dereference the HaspMap entry else
-    // HaspMap got concurrency errors with SmartDashboard
-    // update use of the HashMap
-    }
+    // new Flywheel(12, "rio", "Flywheel Motor", tunePID); // testing; real ones below
+    new Flywheel(51, "CANivore", "Flywheel Motor", tunePID);
+    new Index(52, "CANivore", "Index Motor", tunePID);
+    new Pivot(53, "CANivore", "Pivot Motor", tunePID);
+    MotorController4237.createPIDDashBoard();
+  }
 
   @Override
   public void robotPeriodic()

@@ -2,6 +2,8 @@ package frc.robot;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.sendable.Sendable;
@@ -9,6 +11,8 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.MotorSafety;
 import edu.wpi.first.wpilibj.motorcontrol.MotorController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 
 
 /**
@@ -32,6 +36,7 @@ public abstract class MotorController4237 extends MotorSafety implements MotorCo
     // These varaibles are class and instance variables
     final static DataLog log = DataLogManager.getLog();
     private final static ArrayList<MotorController4237> allMotorControllers4237 = new ArrayList<MotorController4237>();
+    private final static Map<String, Command> allPIDtuning = new HashMap<>(10); // other Classes' motors register here
 
 
     // *** CLASS CONSTRUCTORS ***
@@ -66,6 +71,29 @@ public abstract class MotorController4237 extends MotorSafety implements MotorCo
     {
         allMotorControllers4237.add(this);
     }
+
+    /**
+     * Register the need for using the PID tuning function
+     * 
+     */
+    public static void registerPIDTuning(String name, Command command)
+    {
+        allPIDtuning.put(name, command);
+    }
+
+    public static void createPIDDashBoard()
+    {
+        MotorController4237.allPIDtuning.forEach((name, command)->
+        {
+            String nameCopy = new String(name);
+            Command commandCopy = command.asProxy();
+            SmartDashboard.putData(nameCopy, commandCopy);
+            System.out.println("registered PID tuning dashboard " +  nameCopy + " " + commandCopy);
+        });
+    }
+    // needed to dereference the HaspMap entry else
+    // HaspMap got concurrency errors with SmartDashboard
+    // update use of the HashMap
 
     /**
      * Static method to log sticky faults of the motor controllers in the array list.

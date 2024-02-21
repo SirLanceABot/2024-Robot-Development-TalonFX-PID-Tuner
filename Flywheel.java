@@ -23,8 +23,8 @@ public class Flywheel extends Subsystem4237 {
         motor.setupFactoryDefaults();
         motor.setupInverted(true);
         motor.setupCoastMode();
-        motor.setupVelocityConversionFactor(.7);
-        Robot.tuneThese.put("Flywheel", tunePID());
+        motor.setupVelocityConversionFactor(1.432);
+        MotorController4237.registerPIDTuning("Flywheel", tunePID());
     }
 
     Command tunePID()

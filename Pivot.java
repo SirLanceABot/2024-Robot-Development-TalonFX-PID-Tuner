@@ -23,7 +23,7 @@ public class Pivot extends Subsystem4237 {
         motor.setupFactoryDefaults();
         motor.setupInverted(true);
         motor.setupCoastMode();
-        Robot.tuneThese.put("Pivot", tunePID());
+        MotorController4237.registerPIDTuning("Pivot", tunePID());
     }
 
     Command tunePID()

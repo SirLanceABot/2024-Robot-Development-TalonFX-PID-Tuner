@@ -21,10 +21,10 @@ public class Index extends Subsystem4237 {
         motor = new TalonFX4237(deviceID, canbus, motorControllerName);
         motor.setSafetyEnabled(false); 
         motor.setupFactoryDefaults();
-        motor.setupInverted(true);
+        motor.setupInverted(false);
         motor.setupCoastMode();
-        motor.setupVelocityConversionFactor(0.36);
-        Robot.tuneThese.put("Index", tunePID());
+        motor.setupVelocityConversionFactor(2.865);
+        MotorController4237.registerPIDTuning("Index", tunePID());
     }
 
     Command tunePID()

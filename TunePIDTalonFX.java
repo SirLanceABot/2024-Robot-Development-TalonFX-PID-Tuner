@@ -53,6 +53,10 @@ public class TunePIDTalonFX extends Command {
     slot0ConfigsPrevious = slot0Configs.serialize();
     tentativeKv = 0.;
     clearGainsSetpoints();
+    
+    // set highest possible in case limits are enabled
+    // not reset to previous value before PID tuning
+    motor.setupCurrentLimit(800., 511., 1.275);
   }
 
   public void execute()
